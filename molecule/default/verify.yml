@@ -1,0 +1,82 @@
+---
+# Purpose: assert that the instance really ended up in the expected state.
+# Molecule calls this playbook with `molecule verify`.
+- name: Verify
+  hosts: all
+  gather_facts: true
+  vars:
+    expected_ciphers: chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+    expected_settings:
+      permitrootlogin: "no"
+      permitemptypasswords: "no"
+      passwordauthentication: "no"
+      pubkeyauthentication: "yes"
+      x11forwarding: "no"
+      clientaliveinterval: "300"
+      hostbasedauthentication: "no"
+      ignorerhosts: "yes"
+      loglevel: VERBOSE
+      maxauthtries: "6"
+      maxsessions: "10"
+      maxstartups: "10:30:100"
+      printmotd: "no"
+      allowusers: ansible
+  tasks:
+    - name: Check sshd config is valid
+      ansible.builtin.command: sshd -t
+      changed_when: false
+
+    # sshd -T prints the effective config after all Includes/drop-ins and crypto policies are merged.
+    - name: Get effective sshd config
+      ansible.builtin.command: sshd -T
+      register: sshd_effective
+      changed_when: false
+
+    - name: Parse effective sshd config
+      ansible.builtin.set_fact:
+        sshd_t: "{{ dict(sshd_effective.stdout_lines | map('split', ' ', 1) | selectattr('1', 'defined')) }}"
+
+    - name: Assert Ciphers are restricted
+      ansible.builtin.assert:
+        that: sshd_t.ciphers == expected_ciphers
+        fail_msg: "Effective Ciphers are '{{ sshd_t.ciphers }}'"
+
+    - name: Assert sshd settings took effect
+      ansible.builtin.assert:
+        that: sshd_t[item.key] | default('') == item.value
+        fail_msg: "{{ item.key }} is '{{ sshd_t[item.key] | default('unset') }}', expected '{{ item.value }}'"
+      loop: "{{ expected_settings | dict2items }}"
+
+    - name: Check SSH service is running (RHEL)
+      ansible.builtin.systemd:
+        name: sshd
+      register: sshd_svc
+      failed_when: sshd_svc.status.ActiveState != "active"
+      when: ansible_os_family == "RedHat"
+
+    - name: Check SSH service is running (Debian)
+      ansible.builtin.systemd:
+        name: ssh
+      register: sshd_svc
+      failed_when: sshd_svc.status.ActiveState != "active"
+      when: ansible_os_family == "Debian"
+
+    - name: Get ansible user info
+      ansible.builtin.getent:
+        database: passwd
+        key: ansible
+
+    - name: Get group memberships
+      ansible.builtin.command: id -nG ansible
+      register: ansible_groups
+      changed_when: false
+
+    - name: Assert ansible user is an admin
+      ansible.builtin.assert:
+        that: >-
+          ('wheel' if ansible_os_family == 'RedHat' else 'sudo') in ansible_groups.stdout.split()
+        fail_msg: "ansible is only in: {{ ansible_groups.stdout }}"
+
+    - name: Check authorized_keys contains the test key
+      ansible.builtin.command: grep -q molecule-test /home/ansible/.ssh/authorized_keys
+      changed_when: false

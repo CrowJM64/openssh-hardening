@@ -1,0 +1,18 @@
+---
+# Purpose: bring the instance to the desired state by running the role under test.
+# Molecule calls this playbook with `molecule converge`.
+- name: Converge
+  hosts: all
+  gather_facts: true
+  vars:
+    # Throwaway key generated for testing only - no matching private key is kept.
+    ssh_users_and_keys:
+      - user: ansible
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIYWuiwi1e5gveKpTLr+u835mzBPZhWv27tqDsocnNzf molecule-test"
+        groups: ansible
+        shell: /bin/bash
+        admin: yes
+  tasks:
+    - name: Include openssh-hardening
+      ansible.builtin.include_role:
+        name: openssh-hardening

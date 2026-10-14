@@ -46,100 +46,107 @@
 
 - name: Set SSH Allowed Users
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
     regexp: '^#?\s*AllowUsers'
     line: 'AllowUsers {{ ssh_users_and_keys | map(attribute="user") | join(" ") }}'
     backup: yes
   loop: "{{ ssh_users_and_keys }}"
   register: sshd_config_changed
 
+- name: Set Allowed Ciphers
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
+    regexp: '^#?\s*Ciphers'
+    line: 'Ciphers {{ allowed_ciphers }}'
+  register: sshd_config_changed
+
 - name: Disable Root SSH Login
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
     regexp: '^#?\s*PermitRootLogin'
     line: 'PermitRootLogin {{ allow_root_ssh }}'
   register: sshd_config_changed
 
 - name: Disable Empty Passwords
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
     regexp: '^#?\s*PermitEmptyPasswords'
     line: 'PermitEmptyPasswords {{ allow_empty_passwords }}'
   register: sshd_config_changed
 
 - name: Disable Password Authentication
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
     regexp: '^#?\s*PasswordAuthentication'
     line: 'PasswordAuthentication {{ allow_password_auth }}'
   register: sshd_config_changed
 
 - name: Enable Pubkey Authentication
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
     regexp: '^#?\s*PubkeyAuthentication'
     line: 'PubkeyAuthentication {{ allow_pubkey_auth }}'
   register: sshd_config_changed
 
 - name: Disable X11Forwarding
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
     regexp: '^#?\s*X11Forwarding'
     line: 'X11Forwarding {{ allow_x11_fwd }}'
   register: sshd_config_changed
 
 - name: Set 5 Minute Timeout
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
     regexp: '^#?\s*ClientAliveInterval'
     line: 'ClientAliveInterval {{ client_alive_dur }}'
   register: sshd_config_changed
 
 - name: Set HostBasedAuthentication
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
     regexp: '^#?\s*HostbasedAuthentication'
     line: 'HostbasedAuthentication {{ allow_hostbased_auth }}'
   register: sshd_config_changed
 
 - name: Set IgnoreRhosts
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
     regexp: '^#?\s*IgnoreRhosts'
     line: 'IgnoreRhosts {{ ignore_rhosts }}'
   register: sshd_config_changed
 
 - name: Set SSH LogLevel
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
     regexp: '^#?\s*LogLevel'
     line: 'LogLevel {{ ssh_log_level }}'
   register: sshd_config_changed
 
 - name: Set MaxAuthTries
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
     regexp: '^#?\s*MaxAuthTries'
     line: 'MaxAuthTries {{ max_auth_tries }}'
   register: sshd_config_changed
 
 - name: Set MaxSessions
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
     regexp: '^#?\s*MaxSessions'
     line: 'MaxSessions {{ set_max_sessions }}'
   register: sshd_config_changed
 
 - name: Set MaxStartups
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
     regexp: '^#?\s*MaxStartups'
     line: 'MaxStartups {{ set_max_startups }}'
   register: sshd_config_changed
 
 - name: Set PrintMotd
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: /etc/ssh/sshd_config.d/{{ conf_name }}
     regexp: '^#?\s*PrintMotd'
     line: 'PrintMotd {{ set_print_motd }}'
   register: sshd_config_changed

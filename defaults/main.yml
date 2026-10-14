@@ -1,5 +1,7 @@
 ---
 # SSH Server Config Change Defaults
+conf_name: 40-openssh-hardening
+allowed_ciphers: chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
 allow_root_ssh: 'no' # yes/no
 allow_empty_passwords: 'no' # yes/no
 allow_password_auth: 'no' # yes/no

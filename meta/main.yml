@@ -1,5 +1,7 @@
 galaxy_info:
   author: Josh Murphy
+  namespace: crowjm64
+  role_name: openssh_hardening
   description: System File Hardening using Ansible.
   company: ""
   license: MIT

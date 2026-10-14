@@ -1,0 +1,44 @@
+---
+# Purpose: install what a real server would already have (the base images ship without sshd).
+# Molecule calls this playbook with `molecule prepare`.
+- name: Prepare
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Install OpenSSH Server and sudo (RHEL)
+      ansible.builtin.dnf:
+        name:
+          - openssh-server
+          - sudo
+        state: present
+      when:
+        - ansible_os_family == "RedHat"
+        - ansible_distribution != "Fedora"
+
+    - name: Install OpenSSH Server and sudo (Fedora)
+      ansible.builtin.command: dnf -y install openssh-server sudo
+      changed_when: false
+      when: ansible_distribution == "Fedora"
+
+    - name: Install OpenSSH Server and sudo (Debian)
+      ansible.builtin.apt:
+        name:
+          - openssh-server
+          - sudo
+        state: present
+        update_cache: true
+      when: ansible_os_family == "Debian"
+
+    - name: Start SSHD (RHEL)
+      ansible.builtin.systemd:
+        name: sshd
+        state: started
+        enabled: true
+      when: ansible_os_family == "RedHat"
+
+    - name: Start SSHD (Debian)
+      ansible.builtin.systemd:
+        name: ssh
+        state: started
+        enabled: true
+      when: ansible_os_family == "Debian"
