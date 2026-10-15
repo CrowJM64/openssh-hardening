@@ -5,6 +5,7 @@
 
 This Ansible role hardens the SSHD Config by doing the below:
 ```yaml
+- Sets Allowed SSH Ciphers
 - Creates SSH Users
 - Adds to Sudo/Wheel if desired.
 - Sets SSH Allowed Users
