@@ -42,3 +42,8 @@
         state: started
         enabled: true
       when: ansible_os_family == "Debian"
+
+    - name: Create Ansible Group
+      ansible.builtin.group:
+        name: ansible
+        state: present
