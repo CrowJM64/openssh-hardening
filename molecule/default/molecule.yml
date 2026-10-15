@@ -79,6 +79,15 @@ platforms:
 #    volumes:
 #      - /sys/fs/cgroup:/sys/fs/cgroup:rw
 
+  - name: opensuseleap15
+    image: geerlingguy/docker-opensuseleap15-ansible:latest
+    pre_build_image: true
+    command: /sbin/init
+    privileged: true
+    cgroupns_mode: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+
 ansible:
   cfg:
     defaults:

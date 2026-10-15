@@ -29,6 +29,16 @@
         update_cache: true
       when: ansible_os_family == "Debian"
 
+    - name: Install OpenSSH Server and sudo (Other)
+      ansible.builtin.package:
+        name:
+          - openssh-server
+          - sudo
+        state: present
+      when:
+        - ansible_os_family != "RedHat"
+        - ansible_os_family != "Debian"
+
     - name: Start SSHD (RHEL)
       ansible.builtin.systemd:
         name: sshd
@@ -42,6 +52,15 @@
         state: started
         enabled: true
       when: ansible_os_family == "Debian"
+
+    - name: Install OpenSSH Server and sudo (Other)
+      ansible.builtin.systemd:
+        name: sshd
+        state: started
+        enabled: true
+      when:
+        - ansible_os_family != "RedHat"
+        - ansible_os_family != "Debian"
 
     - name: Create Ansible Group
       ansible.builtin.group:
