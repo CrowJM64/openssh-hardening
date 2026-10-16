@@ -53,13 +53,13 @@ Mint 22
   become: yes
 
   roles:
-    - role: system_ssh_hardening
+    - role: openssh_hardening
 ```
 
 ### From Ansible Galaxy
 
 ```bash
-ansible-galaxy install crowjm64.system_ssh_hardening
+ansible-galaxy install crowjm64.openssh_hardening
 ```
 
 This role was created and is maintained by **[CrowJM64](https://github.com/CrowJM64)**.

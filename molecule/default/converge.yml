@@ -11,7 +11,7 @@
         key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIYWuiwi1e5gveKpTLr+u835mzBPZhWv27tqDsocnNzf molecule-test"
         groups: ansible
         shell: /bin/bash
-        admin: yes
+        admin: true
   tasks:
     - name: Include openssh-hardening
       ansible.builtin.include_role:
