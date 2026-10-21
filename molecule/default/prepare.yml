@@ -38,6 +38,7 @@
       when:
         - ansible_os_family != "RedHat"
         - ansible_os_family != "Debian"
+        - ansible_distribution != "Fedora"
 
     - name: Start SSHD (RHEL)
       ansible.builtin.systemd:
