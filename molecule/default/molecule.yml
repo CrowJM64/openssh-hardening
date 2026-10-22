@@ -61,23 +61,23 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
 
-#  - name: debian13
-#    image: docker.io/geerlingguy/docker-debian13-ansible:latest
-#    pre_build_image: true
-#    command: /sbin/init
-#    privileged: true
+  - name: debian13
+    image: docker.io/geerlingguy/docker-debian13-ansible:latest
+    pre_build_image: true
+    command: /sbin/init
+    privileged: true
 #    cgroupns_mode: host
-#    volumes:
-#      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
 
-#  - name: debian12
-#    image: docker.io/geerlingguy/docker-debian12-ansible:latest
-#    pre_build_image: true
-#    command: /sbin/init
-#    privileged: true
+  - name: debian12
+    image: docker.io/geerlingguy/docker-debian12-ansible:latest
+    pre_build_image: true
+    command: /sbin/init
+    privileged: true
 #    cgroupns_mode: host
-#    volumes:
-#      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
 
   - name: opensuseleap15
     image: docker.io/geerlingguy/docker-opensuseleap15-ansible:latest

@@ -12,13 +12,13 @@
           - sudo
         state: present
       when:
-        - ansible_os_family == "RedHat"
-        - ansible_distribution != "Fedora"
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution'] != "Fedora"
 
     - name: Install OpenSSH Server and sudo (Fedora)
       ansible.builtin.command: dnf -y install openssh-server sudo
       changed_when: false
-      when: ansible_distribution == "Fedora"
+      when: ansible_facts['distribution'] == "Fedora"
 
     - name: Install OpenSSH Server and sudo (Debian)
       ansible.builtin.apt:
@@ -27,7 +27,16 @@
           - sudo
         state: present
         update_cache: true
-      when: ansible_os_family == "Debian"
+        cache_valid_time: 3600
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install OpenSSH Server and sudo (Suse)
+      community.general.zypper:
+        name:
+          - openssh-server
+          - sudo
+        state: present
+      when: ansible_facts['os_family'] == "Suse"
 
     - name: Install OpenSSH Server and sudo (Other)
       ansible.builtin.package:
@@ -36,32 +45,29 @@
           - sudo
         state: present
       when:
-        - ansible_os_family != "RedHat"
-        - ansible_os_family != "Debian"
-        - ansible_distribution != "Fedora"
+        - ansible_facts['os_family'] not in ["RedHat", "Debian", "Suse"]
 
     - name: Start SSHD (RHEL)
       ansible.builtin.systemd:
         name: sshd
         state: started
         enabled: true
-      when: ansible_os_family == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat"
 
     - name: Start SSHD (Debian)
       ansible.builtin.systemd:
         name: ssh
         state: started
         enabled: true
-      when: ansible_os_family == "Debian"
+      when: ansible_facts['os_family'] == "Debian"
 
-    - name: Install OpenSSH Server and sudo (Other)
+    - name: Start SSHD Service
       ansible.builtin.systemd:
         name: sshd
         state: started
         enabled: true
       when:
-        - ansible_os_family != "RedHat"
-        - ansible_os_family != "Debian"
+        - ansible_facts['os_family'] != "Debian"
 
     - name: Create Ansible Group
       ansible.builtin.group:

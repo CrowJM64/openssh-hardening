@@ -1,5 +1,6 @@
 # requirements.yml
 ---
 collections:
+  - name: community.general
   - name: ansible.posix
     version: ">=1.5.0"

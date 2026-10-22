@@ -8,25 +8,25 @@
     append: true
   loop: "{{ ssh_users_and_keys }}"
 
-- name: Add User to Sudo (RHEL)
-  ansible.builtin.user:
-    name: "{{ item.user }}"
-    groups: sudo
-    append: true
-  loop: "{{ ssh_users_and_keys }}"
-  when:
-    - item.admin == "yes"
-    - ansible_os_family == "RedHat"
-
-- name: Add User to Wheel (DEB)
+- name: Add User to Wheel (RHEL)
   ansible.builtin.user:
     name: "{{ item.user }}"
     groups: wheel
     append: true
   loop: "{{ ssh_users_and_keys }}"
   when:
-    - item.admin == "yes"
-    - ansible_os_family == "Debian"
+    - item.admin == true
+    - ansible_facts['os_family'] == "RedHat"
+
+- name: Add User to Sudo (DEB)
+  ansible.builtin.user:
+    name: "{{ item.user }}"
+    groups: sudo
+    append: true
+  loop: "{{ ssh_users_and_keys }}"
+  when:
+    - item.admin == true
+    - ansible_facts['os_family'] == "Debian"
 
 - name: Ensure SSH Directories Exist
   ansible.builtin.file:
@@ -165,7 +165,7 @@
     state: restarted
   when:
     - sshd_config_changed is changed
-    - ansible_os_family == "Debian"
+    - ansible_facts['os_family'] == "Debian"
 
 - name: Restart SSHD With Changes (RHEL)
   ansible.builtin.systemd:
@@ -173,4 +173,4 @@
     state: restarted
   when:
     - sshd_config_changed is changed
-    - ansible_os_family == "RedHat"
+    - ansible_facts['os_family'] in ["RedHat", "Suse"]

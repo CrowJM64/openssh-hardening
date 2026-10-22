@@ -22,9 +22,10 @@ ssh_users_and_keys:
     key: "ssh-ed25519 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     groups: ansible
     shell: /bin/bash
-    admin: yes
+    admin: true
 
-#  -user: example
-#   key: "{{ lookup('file', 'files/ssh/example/id_ed25519.pub') }}"
-#    groups: wheel
+#  - user: example
+#    key: "ssh-ed25519 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+#    groups: example
 #    shell: /bin/bash
+#    admin: true # true/false
