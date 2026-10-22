@@ -1,0 +1,17 @@
+# templates/openssh-hardening.conf.j2
+# Managed by Ansible (openssh-hardening). Manual changes will be overwritten. To override these changes, create a file in /etc/sshd_config.d/ starting with a number lower than the number preceding this config file.
+AllowUsers {{ ssh_users_and_keys | map(attribute='user') | join(' ') }}
+Ciphers {{ allowed_ciphers }}
+PermitRootLogin {{ allow_root_ssh }}
+PermitEmptyPasswords {{ allow_empty_passwords }}
+PasswordAuthentication {{ allow_password_auth }}
+PubkeyAuthentication {{ allow_pubkey_auth }}
+X11Forwarding {{ allow_x11_fwd }}
+ClientAliveInterval {{ client_alive_dur }}
+HostbasedAuthentication {{ allow_hostbased_auth }}
+IgnoreRhosts {{ ignore_rhosts }}
+LogLevel {{ ssh_log_level }}
+MaxAuthTries {{ max_auth_tries }}
+MaxSessions {{ set_max_sessions }}
+MaxStartups {{ set_max_startups }}
+PrintMotd {{ set_print_motd }}
