@@ -1,0 +1,12 @@
+FROM {{ item.image }}
+
+RUN if command -v dnf >/dev/null; then \
+      dnf -y install systemd python3 sudo procps-ng && dnf clean all; \
+    elif command -v yum >/dev/null; then \
+      yum -y install systemd python3 sudo && yum clean all; \
+    elif command -v zypper >/dev/null; then \
+      zypper -n install systemd python3 sudo && zypper clean -a; \
+    fi
+
+STOPSIGNAL SIGRTMIN+3
+CMD ["/sbin/init"]

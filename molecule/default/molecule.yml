@@ -7,12 +7,12 @@ dependency:
 driver: {name: containers}
 
 platforms:
+# RedHat
   - name: rockylinux10
     image: docker.io/geerlingguy/docker-rockylinux10-ansible:latest # Must use Fully Qualified name of Image and domain to pull from to be compatible with Podman.
     pre_build_image: true
     command: /sbin/init
     privileged: true
-#    cgroupns_mode: host
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
 
@@ -21,7 +21,6 @@ platforms:
     pre_build_image: true
     command: /sbin/init
     privileged: true
-#    cgroupns_mode: host
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
 
@@ -30,7 +29,6 @@ platforms:
     pre_build_image: true
     command: /sbin/init
     privileged: true
-#    cgroupns_mode: host
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
 
@@ -39,16 +37,15 @@ platforms:
     pre_build_image: true
     command: /sbin/init
     privileged: true
-#    cgroupns_mode: host
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
 
+# Debian
   - name: ubuntu2604
     image: docker.io/geerlingguy/docker-ubuntu2604-ansible:latest
     pre_build_image: true
     command: /sbin/init
     privileged: true
-#    cgroupns_mode: host
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
 
@@ -57,7 +54,6 @@ platforms:
     pre_build_image: true
     command: /sbin/init
     privileged: true
-#    cgroupns_mode: host
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
 
@@ -66,7 +62,6 @@ platforms:
     pre_build_image: true
     command: /sbin/init
     privileged: true
-#    cgroupns_mode: host
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
 
@@ -75,16 +70,52 @@ platforms:
     pre_build_image: true
     command: /sbin/init
     privileged: true
-#    cgroupns_mode: host
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
 
-  - name: opensuseleap15
-    image: docker.io/geerlingguy/docker-opensuseleap15-ansible:latest
+# Oracle
+  - name: oraclelinux10
+    image: docker.io/library/oraclelinux:10
     pre_build_image: true
     command: /sbin/init
     privileged: true
-#    cgroupns_mode: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+
+  - name: oraclelinux9
+    image: docker.io/library/oraclelinux:9
+    pre_build_image: true
+    command: /sbin/init
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+
+# Amazon
+  - name: amazonlinux2027
+    image: docker.io/amazonlinux:2027
+    pre_build_image: false
+    dockerfile: Dockerfile.j2
+    command: /sbin/init
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+
+  - name: amazonlinux2023
+    image: docker.io/library/amazonlinux:2023
+    pre_build_image: false
+    dockerfile: Dockerfile.j2
+    command: /sbin/init
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+
+# Opensuse
+  - name: opensuseleap15
+    image: docker.io/geerlingguy/docker-opensuseleap15-ansible:latest
+    pre_build_image: false
+    dockerfile: Dockerfile.j2
+    command: /sbin/init
+    privileged: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
 

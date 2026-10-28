@@ -52,14 +52,14 @@
         name: sshd
       register: sshd_svc
       failed_when: sshd_svc.status.ActiveState != "active"
-      when: ansible_os_family == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat"
 
     - name: Check SSH service is running (Debian)
       ansible.builtin.systemd:
         name: ssh
       register: sshd_svc
       failed_when: sshd_svc.status.ActiveState != "active"
-      when: ansible_os_family == "Debian"
+      when: ansible_facts['os_family'] == "Debian"
 
     - name: Get ansible user info
       ansible.builtin.getent:
@@ -74,7 +74,7 @@
     - name: Assert ansible user is an admin
       ansible.builtin.assert:
         that: >-
-          ('wheel' if ansible_os_family == 'RedHat' else 'sudo') in ansible_groups.stdout.split()
+          ('wheel' if ansible_facts['os_family'] in ["RedHat", "Suse"] else 'sudo') in ansible_groups.stdout.split()
         fail_msg: "ansible is only in: {{ ansible_groups.stdout }}"
 
     - name: Check authorized_keys contains the test key
