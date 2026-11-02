@@ -5,26 +5,29 @@
 
 This Ansible role hardens the SSHD Config by doing the below:
 ```yaml
-- Sets Allowed SSH Ciphers
 - Creates SSH Users
 - Adds to Sudo/Wheel if desired.
 - Sets SSH Allowed Users
 - Copys SSH PubKeys
-- Sets Allow/Deny Root SSH Login
-- Sets Allow/Deny Empty Passwords
-- Sets Allow/Deny Password Authentication
-- Sets Allow/Deny Pubkey Authentication
-- Sets Allow/Deny X11Forwarding
-- Sets an Inactivity Timeout on SSH Sessions
-- Sets Allow/Deny HostBasedAuthentication
-- Sets Allow/Deny IgnoreRhosts
-- Sets SSH LogLevel
-- Sets MaxAuthTries
-- Sets MaxSessions
-- Sets MaxStartups
-- Sets PrintMotd
-- Restarts when any of the above has changed to apply settings.
-Backups of the SSHD config are taken when any changes happen so you can revert easily if needed.
+Copies openssh-hardening.conf template to cover the following settings:
+- Allowed SSH Ciphers
+- Allow/Deny Root SSH Login
+- Allow/Deny Empty Passwords
+- Allow/Deny Password Authentication
+- Allow/Deny Pubkey Authentication
+- Allow/Deny X11Forwarding
+- Inactivity Timeout on SSH Sessions
+- Allow/Deny HostBasedAuthentication
+- Allow/Deny IgnoreRhosts
+- SSH LogLevel
+- MaxAuthTries
+- MaxSessions
+- MaxStartups
+- PrintMotd
+
+It will then restarts when any of the above has changed to apply settings.
+
+Removal of the template from /etc/ssh/sshd_config.d/ and a subsequent restart of the sshd service will clear any settings changed by this role.
 ```
 
 ## Dependencies
@@ -34,16 +37,17 @@ Backups of the SSHD config are taken when any changes happen so you can revert e
 The files changed should exist on every RedHat and Debian Distro. Below are the explicitly tested Distros.
 ```yaml
 # RedHat
-Rocky 10/9
-CentOS 10/9
-Fedora 43/42
-Oracle 10
+Rocky 10,9
+Fedora 44,43
+Oracle 10,9
 
-  # Debian
-Ubuntu 24.04/22.04
-Debian 13
-Alma 10
-Mint 22
+# Debian
+Ubuntu 26.04,24.04
+Debian 13,12
+
+# Other
+AmazonLinux 2027,2023
+OpenSuse Leap 15
 ```
 
 ## Example Playbook
